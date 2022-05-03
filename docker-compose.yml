@@ -1,0 +1,34 @@
+version: "2"
+services:
+  front:
+    build: client
+    command: npm start
+    volumes:
+      - ./client:/usr/app
+      - /usr/app/node_modules
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+  backend:
+    build: server
+    command: node index
+    volumes:
+      - ./server:/usr/app
+      - /usr/app/node_modules
+    ports:
+      - "3001:3001"
+    environment:
+      CONNECTION_URL: postgres://todoapp:password@postgres/todos
+
+  postgres:
+    image: postgres:14-alpine
+    environment:
+      POSTGRES_USER: todoapp
+      POSTGRES_DB: todos
+      POSTGRES_PASSWORD: password
+    volumes:
+      - ./db:/docker-entrypoint-initdb.d/
+    ports:
+      - 5432:5432
