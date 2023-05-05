@@ -1,8 +1,10 @@
 import React, { Fragment, useState } from "react"
 import PropTypes from 'prop-types'
+import serverApiUrl from "./consts"
+
 
 async function loginUser(credentials) {
-    return fetch('http://localhost:3001/login', {
+    return fetch(`${serverApiUrl}/login`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
