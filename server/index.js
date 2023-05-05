@@ -1,5 +1,7 @@
 // index.js
 const express = require("express")
+const swaggerUi = require('swagger-ui-express')
+const swaggerFile = require('./swagger_output.json')
 const app = express()
 const cors = require("cors")
 const pool = require("./db")
@@ -47,6 +49,9 @@ const encrypt = async (password) => {
 const compare = async (plainPassword, password) => {
     return await bcrypt.compare(plainPassword, password)
 }
+
+// swagger doc
+app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerFile))
 
 // registrar usuario
 app.post("/register", async (req, res) => {
