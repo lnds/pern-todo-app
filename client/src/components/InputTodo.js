@@ -13,7 +13,7 @@ const InputTodo = () => {
         e.preventDefault()
         try {
             const body = { description }
-            const response = await fetch(serverApiUrl, {
+            const response = await fetch(`${serverApiUrl}/todos`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

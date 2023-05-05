@@ -12,7 +12,7 @@ const EditTodo = ({ todo }) => {
         e.preventDefault();
         try {
             const body = { description }
-            const response = await fetch(`${serverApiUrl}/${todo.id}`, {
+            const response = await fetch(`${serverApiUrl}/todos/${todo.id}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",

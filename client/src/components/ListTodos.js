@@ -14,7 +14,7 @@ const ListTodos = () => {
     // delete todo function
     const deleteTodo = async (id) => {
         try {
-            const deleteTodo = await fetch(`${serverApiUrl}/${id}`, {
+            const deleteTodo = await fetch(`${serverApiUrl}/todos/${id}`, {
                 method: "DELETE",
                 headers: {
                     "token": token
@@ -30,7 +30,7 @@ const ListTodos = () => {
 
     const getTodos = async () => {
         try {
-            const response = await fetch(serverApiUrl, {
+            const response = await fetch(`${serverApiUrl}/todos`, {
                 headers: {
                     "token": token
                 }
