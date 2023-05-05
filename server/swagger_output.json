@@ -13,7 +13,7 @@
   "paths": {
     "/register": {
       "post": {
-        "description": "",
+        "description": "Endpoint para registrar un nuevo usuario en la plataforma",
         "parameters": [
           {
             "name": "body",
@@ -49,7 +49,7 @@
     },
     "/login": {
       "post": {
-        "description": "",
+        "description": "Endpoint para obtener un token de sesión para el usuario",
         "parameters": [
           {
             "name": "body",
@@ -80,9 +80,23 @@
         }
       }
     },
+    "/users": {
+      "get": {
+        "description": "Endpoint para listar todos los usuarios registrados en el sistema",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
     "/verify": {
       "get": {
-        "description": "",
+        "description": "Endpoint para validar un token",
         "parameters": [
           {
             "name": "token",
@@ -105,7 +119,7 @@
     },
     "/todos": {
       "post": {
-        "description": "",
+        "description": "Endpoint para crear una tarea, pertenece al usuario registrado en el token de sesión",
         "parameters": [
           {
             "name": "token",
@@ -135,7 +149,7 @@
         }
       },
       "get": {
-        "description": "",
+        "description": "Endpoint para listar todas las tareas que pertenecen al usuario registrado en el token de sesión",
         "parameters": [
           {
             "name": "token",
@@ -149,13 +163,16 @@
           },
           "403": {
             "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
     },
     "/todos/{id}": {
       "get": {
-        "description": "",
+        "description": "Endpoint para obtener una tarea especifica y que pertenezca al usuario registrado en el token de sesión",
         "parameters": [
           {
             "name": "id",
@@ -175,11 +192,14 @@
           },
           "403": {
             "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       },
       "put": {
-        "description": "",
+        "description": "Endpoint para actualizar la descripción de una tarea especifica y que pertenezca al usuario registrado en el token de sesión",
         "parameters": [
           {
             "name": "id",
@@ -211,11 +231,14 @@
           },
           "403": {
             "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       },
       "delete": {
-        "description": "",
+        "description": "Endpoint para borrar una tarea especifica y que pertenezca al usuario registrado en el token de sesión",
         "parameters": [
           {
             "name": "id",
@@ -235,6 +258,9 @@
           },
           "403": {
             "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }

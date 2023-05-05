@@ -22,7 +22,7 @@ services:
     environment:
       CONNECTION_URL: postgres://todoapp:password@postgres/todos
       PORT: 3001
-      JWT_SECRET: uai1208
+      JWT_SECRET: uai5623
   postgres:
     image: postgres:14-alpine
     environment:
@@ -32,4 +32,4 @@ services:
     volumes:
       - ./db:/docker-entrypoint-initdb.d/
     ports:
-      - 5432:5432
+      - 5432

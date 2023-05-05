@@ -35,10 +35,6 @@ const encrypt = async (password) => {
     //  Encriptar password usand bCrypt
     const saltRounds = 10
     const salt = await bcrypt.genSalt(saltRounds)
-    console.log("salt")
-    console.log(salt)
-    console.log("password")
-    console.log(password)
     const bcryptPassword = await bcrypt.hash(password, salt)
     return bcryptPassword
 }
@@ -55,18 +51,12 @@ app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerFile))
 
 // registrar usuario
 app.post("/register", async (req, res) => {
+    // #swagger.description = 'Endpoint para registrar un nuevo usuario en la  plataforma'
+
     try {
         // 1. destructurar req.body para obtner (name, email, password)
         const { name, email, password } = req.body
-        console.log("register")
-        console.log("name")
-        console.log(name)
-        console.log("email")
-        console.log(email)
-        console.log("password")
-        console.log(password)
-        console.log("req.body")
-        console.log(req.body)
+
 
         // 2. verificar si el usuario existe (si existe lanzar un error, con throw)
         const user = await pool.query("SELECT * FROM users WHERE email = $1", [email])
@@ -93,17 +83,11 @@ app.post("/register", async (req, res) => {
 
 // verificar usuario
 app.post("/login", async (req, res) => {
+    // #swagger.description = 'Endpoint para obtener un token de sesión para el usuario'
     try {
         // 1. destructurizar req.body
         const { email, password } = req.body
 
-        console.log("login")
-        console.log("email")
-        console.log(email)
-        console.log("password")
-        console.log(password)
-        console.log("req.body")
-        console.log(req.body)
 
         // 2. verificar si el usuario no existe (si no emitiremos un error)
         const user = await pool.query("SELECT * FROM users WHERE email = $1", [email])
@@ -127,6 +111,21 @@ app.post("/login", async (req, res) => {
         res.status(500).send("Server error")
     }
 })
+
+// List all users
+app.get("/users", async (req, res) => {
+    // #swagger.description = 'Endpoint para listar todos los usuarios registrados en el sistema'
+    try {
+        const allUsers = await pool.query(
+            "SELECT id, name, email FROM users"
+        )
+        res.json(allUsers.rows)
+    } catch (err) {
+        console.error(err.message)
+        res.status(500).send("Server error")
+    }
+})
+
 
 // Un middleware para validar JWT
 const authorization = async (req, res, next) => {
@@ -154,6 +153,7 @@ const authorization = async (req, res, next) => {
 }
 
 app.get("/verify", authorization, async (req, res) => {
+    // #swagger.description = 'Endpoint para validar un token'
     try {
         res.json(true)
     } catch (err) {
@@ -162,13 +162,15 @@ app.get("/verify", authorization, async (req, res) => {
     }
 })
 
+
 //create a todo
 app.post("/todos", authorization, async (req, res) => {
+    // #swagger.description = 'Endpoint para crear una tarea, pertenece al usuario registrado en el token de sesión'
     try {
         const { description } = req.body
         const newTodo = await pool.query(
-            "INSERT INTO todos(description) VALUES($1) RETURNING *",
-            [description]
+            "INSERT INTO todos(description, user_id) VALUES($1, $2) RETURNING *",
+            [description, req.user]
         )
         res.json(newTodo.rows[0])
     } catch (err) {
@@ -178,61 +180,67 @@ app.post("/todos", authorization, async (req, res) => {
 
 //get all todos
 app.get("/todos", authorization, async (req, res) => {
+    // #swagger.description = 'Endpoint para listar todas las tareas que pertenecen al usuario registrado en el token de sesión'
     try {
         const allTodos = await pool.query(
-            "SELECT * FROM todos ORDER BY id"
+            "SELECT * FROM todos WHERE user_id = $1 ORDER BY id",
+            [req.user]
         )
         res.json(allTodos.rows)
     } catch (err) {
         console.error(err.message)
+        res.status(500).send("Server error")
     }
 })
 
 //get a todo
 app.get("/todos/:id", authorization, async (req, res) => {
+    // #swagger.description = 'Endpoint para obtener una tarea especifica y que pertenezca al usuario registrado en el token de sesión'
     try {
         const { id } = req.params
         const todo = await pool.query(
-            "SELECT * FROM todos WHERE id = $1",
-            [id]
+            "SELECT * FROM todos WHERE id = $1 and user_id = $2",
+            [id, req.user]
         )
         res.json(todo.rows[0])
     } catch (err) {
         console.log(err)
-
+        res.status(500).send("Server error")
     }
 })
 
 //update a todo
 app.put("/todos/:id", authorization, async (req, res) => {
+    // #swagger.description = 'Endpoint para actualizar la descripción de una tarea especifica y que pertenezca al usuario registrado en el token de sesión'
     try {
         const { id } = req.params
         const { description } = req.body
         const updateTodo = await pool.query(
-            "UPDATE todos SET description = $1 WHERE id = $2",
-            [description, id]
+            "UPDATE todos SET description = $1 WHERE id = $2 and user_id = $3",
+            [description, id, req.user]
         )
         console.log(updateTodo)
         res.json("Todo was updated")
     } catch (err) {
         console.log(err)
-
+        res.status(500).send("Server error")
     }
 })
 
 //delete a todo
 app.delete("/todos/:id", authorization, async (req, res) => {
+    // #swagger.description = 'Endpoint para borrar una tarea especifica y que pertenezca al usuario registrado en el token de sesión'
     try {
         const { id } = req.params
         const deleteTodo = await pool.query(
-            "DELETE FROM todos WHERE id = $1",
-            [id]
+            "DELETE FROM todos WHERE id = $1 and user_id = $2",
+            [id, req.user]
         )
         console.log(deleteTodo)
         res.json("todo was deleted")
     } catch (err) {
         console.error(err)
-
+        res.status(500).send("Server error")
     }
 })
 

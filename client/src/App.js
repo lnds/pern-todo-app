@@ -6,6 +6,7 @@ import './App.css';
 import InputTodo from "./components/InputTodo";
 import ListTodos from "./components/ListTodos";
 import Login from "./components/Login";
+import Logout from "./components/Logout";
 import useToken from './useToken';
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
   return (
     <Fragment >
       <div className="container">
+        <Logout />
         <InputTodo />
         <ListTodos />
       </div>
