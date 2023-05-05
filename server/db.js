@@ -1,9 +1,11 @@
+// db.js
+
 const Pool = require("pg").Pool
 
-const connectionString = process.env.CONNECTION_URL
+const { connectionString } = require('./config')
 
 const pool = new Pool({
-    connectionString
+    connectionString,
 })
 
 module.exports = pool

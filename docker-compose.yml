@@ -21,7 +21,8 @@ services:
       - "3001:3001"
     environment:
       CONNECTION_URL: postgres://todoapp:password@postgres/todos
-
+      PORT: 3001
+      JWT_SECRET: uai1208
   postgres:
     image: postgres:14-alpine
     environment:

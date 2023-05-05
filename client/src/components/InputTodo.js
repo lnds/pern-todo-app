@@ -1,16 +1,24 @@
 import React, { Fragment, useState } from "react"
+import useToken from "../useToken"
+
+import serverApiUrl from "./consts"
 
 const InputTodo = () => {
 
     const [description, setDescription] = useState("")
 
+    const { token, _setToken } = useToken()
+
     const onSubmitForm = async e => {
         e.preventDefault()
         try {
             const body = { description }
-            const response = await fetch("http://localhost:3001/todos", {
+            const response = await fetch(serverApiUrl, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                    "Content-Type": "application/json",
+                    "token": token
+                },
                 body: JSON.stringify(body)
             })
             window.location = "/"
