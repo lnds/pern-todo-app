@@ -175,6 +175,7 @@ app.post("/todos", authorization, async (req, res) => {
         res.json(newTodo.rows[0])
     } catch (err) {
         console.error(err.message)
+        res.status(500).send("Server error")
     }
 })
 
